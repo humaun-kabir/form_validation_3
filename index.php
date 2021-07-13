@@ -72,7 +72,7 @@
             $error_msg['pass3'] = "Password must be 8-20";
         }
         $website = $_POST['website'];
-        if(filter_var($website,FILTER_VALIDATE_URL)){
+        if(!filter_var($website,FILTER_VALIDATE_URL)){
             $error_msg['website'] = "invalid website address";
         }
 
@@ -80,6 +80,23 @@
         if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
             $error_msg['email'] = "invalid email";
         }
+
+        if($_FILES['img']['name']){
+
+           //if($_FILES['img']['size'] <= (1024*1024)) && ($_FILES['img']['type'] == "image/jpeg") && ($_FILES['img']['type'] == "image/png"){
+
+                move_uploaded_file($_FILES['img']['tmp_name'],"upload/" .time() .rand() .$_FILES['img']['name']);
+
+            
+        }
+        else{
+            $error_msg['img'] = "Image is required";
+        }
+
+        if(empty($_POST['agree'])){
+            $error_msg['agree'] = "please checked";
+        }
+
 
     }
 ?>
@@ -188,12 +205,13 @@
                     </td>
                     <td>
                         <input type="text" class="text" id="reg" name="reg" placeholder="Registration">
-                    </td>
+                    
                     <?php
                             if(isset($error_msg['reg'])){
                                 echo"<div class='error'>". $error_msg['reg']."</div>";
                             }
-                        ?>
+                    ?>
+                    </td>
                 </tr>
 
                 <tr class="row">
@@ -251,7 +269,8 @@
                 </tr>
 
                 <tr class="row">
-                    <input type="radio" name="sex" id="sex" value="male" <?php if(isset($sex) && $sex = 'male') echo 'checked = "checked"'; ?>>
+                    <td class="label"><label for="sex">Gender</lable></td>
+                    <td><input type="radio" name="sex" id="sex" value="male" <?php if(isset($sex) && $sex = 'male') echo 'checked = "checked"'; ?>>
                     <label for="sex">Male</label>
                     <input type="radio" name="sex" id="sex" value="female" <?php if(isset($sex) && $sex = 'female') echo 'checked = "checked"'; ?>>
                     <label for="sex">Female</label>
@@ -260,6 +279,7 @@
                                 echo"<div class='error'>". $error_msg['sex']."</div>";
                             }
                         ?>
+                    </td>
                 </tr>
 
                 <tr class="row">
@@ -276,7 +296,7 @@
 
                 <tr class="row">
                     <td class="label"><label for="pass">Password</lable></td>
-                    <td> <input type="text" class="text" placeholder="password" id="pass" name="pass"> </td>
+                    <td> <input type="text" class="text" placeholder="password" id="pass" name="pass"> 
                     <?php
                             if(isset($error_msg['pass'])){
                                 echo"<div class='error'>". $error_msg['pass']."</div>";
@@ -286,6 +306,7 @@
                                 echo"<div class='error'>". $error_msg['pass3']."</div>";
                             }
                     ?>
+                    </td>
                 </tr>
 
                 <tr class="row">
@@ -333,9 +354,37 @@
                     ?>
                 </td>
                 </tr>
+
+                <tr class="row">
+                    <td class="label">
+                        <label for="img">Image</label>
+                    </td>
+                    <td><input type="file" name="img" id="img">
+                    <?php
+                            if(isset($error_msg['img'])){
+                                echo"<div class='error'>". $error_msg['img']."</div>";
+                            }
+                    ?>
                 
+                </td>
+                </tr>
+                
+                <tr class="row">
+                    <td class="label">
+                        <input type="checkbox" name="agree" id="agree" value="yes" <?php if(isset($agree) && $agree='yes') echo 'checked = "checked"' ?>>
+                        <label for="agree">I agree Team of Service and Privacy Policy</label>
+                        <?php
+                            if(isset($error_msg['agree'])){
+                                echo"<div class='error'>". $error_msg['agree']."</div>";
+                            }
+                    ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input class="btn" type="submit" name="submit"></td>
+                </tr>
             </table>
-            <input class="btn" type="submit" name="submit">
+            
         </form>
     </div>
 </body>
